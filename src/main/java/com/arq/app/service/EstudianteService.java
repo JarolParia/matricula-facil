@@ -32,6 +32,13 @@ public class EstudianteService {
                 .orElseThrow(() -> new IllegalArgumentException("No existe el estudiante con id " + id));
     }
 
+    @Transactional(readOnly = true)
+    public Estudiante buscarConMatriculas(Long id) {
+        Estudiante estudiante = buscarPorId(id);
+        estudiante.getMatriculas().size();   // fuerza la carga dentro de la transacción
+        return estudiante;
+    }
+
     public Estudiante guardar(Estudiante estudiante) {
         boolean duplicado = (estudiante.getId() == null)
                 ? estudianteRepository.existsByDocumento(estudiante.getDocumento())
