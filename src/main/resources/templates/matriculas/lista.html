@@ -1,54 +1,63 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <title>Matrículas</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+<head th:replace="~{fragments/nav :: cabecera('Matrículas')}"></head>
 <body>
-<div th:replace="~{fragments/nav :: menu}"></div>
-<div class="container">
-  <div class="d-flex justify-content-between mb-3">
-    <h2>Matrículas</h2>
-    <a class="btn btn-primary" th:href="@{/matriculas/nuevo}">Registrar matrícula</a>
-  </div>
+<div th:replace="~{fragments/nav :: menu('matriculas')}"></div>
+<div class="container pb-5">
   <div th:replace="~{fragments/nav :: mensajes}"></div>
-
-  <table class="table table-striped align-middle">
-    <thead>
-    <tr><th>Estudiante</th><th>Programa</th><th>Periodo</th><th>Sem.</th><th>Fecha</th><th>Estado</th><th>Valor</th><th>Acciones</th></tr>
-    </thead>
-    <tbody>
-    <tr th:each="m : ${matriculas}">
-      <td th:text="${m.estudiante.nombres + ' ' + m.estudiante.apellidos}"></td>
-      <td th:text="${m.programa}"></td>
-      <td th:text="${m.periodo}"></td>
-      <td th:text="${m.semestre}"></td>
-      <td th:text="${m.fechaMatricula}"></td>
-      <td><span class="badge"
-                th:classappend="${m.estado == 'APROBADA'} ? 'bg-success' : (${m.estado == 'RECHAZADA'} ? 'bg-danger' : 'bg-warning text-dark')"
-                th:text="${m.estado}"></span></td>
-      <td th:text="${m.valor}"></td>
-      <td>
-        <a class="btn btn-sm btn-info" th:href="@{/matriculas/{id}(id=${m.id})}">Ver</a>
-        <a class="btn btn-sm btn-warning" th:href="@{/matriculas/{id}/editar(id=${m.id})}">Editar</a>
-        <form class="d-inline" method="post" th:action="@{/matriculas/{id}/aprobar(id=${m.id})}">
-          <button class="btn btn-sm btn-success" type="submit">Aprobar</button>
-        </form>
-        <form class="d-inline" method="post" th:action="@{/matriculas/{id}/rechazar(id=${m.id})}">
-          <button class="btn btn-sm btn-secondary" type="submit">Rechazar</button>
-        </form>
-        <form class="d-inline" method="post" th:action="@{/matriculas/{id}/eliminar(id=${m.id})}"
-              onsubmit="return confirm('¿Eliminar esta matrícula?');">
-          <button class="btn btn-sm btn-danger" type="submit">Eliminar</button>
-        </form>
-      </td>
-    </tr>
-    <tr th:if="${#lists.isEmpty(matriculas)}">
-      <td colspan="8" class="text-center text-muted">No hay matrículas registradas</td>
-    </tr>
-    </tbody>
-  </table>
+  <div class="tarjeta">
+    <div class="tarjeta-encabezado">
+      <h2><i class="bi bi-journal-check me-2"></i>Matrículas</h2>
+      <a class="btn btn-principal" th:href="@{/matriculas/nuevo}">
+        <i class="bi bi-plus-lg me-1"></i>Registrar matrícula</a>
+    </div>
+    <div class="table-responsive">
+      <table class="table tabla">
+        <thead>
+        <tr><th>Estudiante</th><th>Programa</th><th>Periodo</th><th>Sem.</th><th>Fecha</th><th>Estado</th><th>Valor</th><th>Acciones</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="m : ${matriculas}">
+          <td>
+            <span class="avatar" th:text="${#strings.substring(m.estudiante.nombres,0,1) + #strings.substring(m.estudiante.apellidos,0,1)}"></span>
+            <span class="fw-semibold" th:text="${m.estudiante.nombres + ' ' + m.estudiante.apellidos}"></span>
+          </td>
+          <td th:text="${m.programa}"></td>
+          <td th:text="${m.periodo}"></td>
+          <td th:text="${m.semestre}"></td>
+          <td th:text="${m.fechaMatricula}"></td>
+          <td><span class="estado" th:classappend="'estado-' + ${m.estado}" th:text="${m.estado}"></span></td>
+          <td th:text="${'$ ' + #numbers.formatDecimal(m.valor, 0, 'POINT', 0, 'COMMA')}"></td>
+          <td>
+            <div class="acciones">
+              <a class="btn btn-sm btn-outline-info btn-icono" title="Ver"
+                 th:href="@{/matriculas/{id}(id=${m.id})}"><i class="bi bi-eye"></i></a>
+              <a class="btn btn-sm btn-outline-warning btn-icono" title="Editar"
+                 th:href="@{/matriculas/{id}/editar(id=${m.id})}"><i class="bi bi-pencil"></i></a>
+              <form method="post" th:action="@{/matriculas/{id}/aprobar(id=${m.id})}">
+                <button class="btn btn-sm btn-outline-success btn-icono" title="Aprobar" type="submit">
+                  <i class="bi bi-check-lg"></i></button>
+              </form>
+              <form method="post" th:action="@{/matriculas/{id}/rechazar(id=${m.id})}">
+                <button class="btn btn-sm btn-outline-secondary btn-icono" title="Rechazar" type="submit">
+                  <i class="bi bi-x-lg"></i></button>
+              </form>
+              <form method="post" th:action="@{/matriculas/{id}/eliminar(id=${m.id})}"
+                    onsubmit="return confirm('¿Eliminar esta matrícula?');">
+                <button class="btn btn-sm btn-outline-danger btn-icono" title="Eliminar" type="submit">
+                  <i class="bi bi-trash"></i></button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(matriculas)}">
+          <td colspan="8" class="text-center text-muted py-4">
+            <i class="bi bi-inbox fs-3 d-block"></i>No hay matrículas registradas</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 </body>
 </html>

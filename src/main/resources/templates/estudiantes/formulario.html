@@ -1,51 +1,54 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <title>Estudiante</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+<head th:replace="~{fragments/nav :: cabecera('Estudiantes')}"></head>
 <body>
-<div th:replace="~{fragments/nav :: menu}"></div>
+<div th:replace="~{fragments/nav :: menu('estudiantes')}"></div>
 <div class="container" style="max-width: 600px;">
   <h2 th:text="${titulo}"></h2>
-  <form method="post" th:action="@{/estudiantes/guardar}" th:object="${estudiante}">
-    <input type="hidden" th:field="*{id}">
+  <div class="container pb-5" style="max-width: 650px;">
+    <div class="tarjeta">
+      <div class="tarjeta-encabezado"><h2 th:text="${titulo}"></h2></div>
+      <div class="tarjeta-cuerpo">
+        <form method="post" th:action="@{/estudiantes/guardar}" th:object="${estudiante}">
+          <input type="hidden" th:field="*{id}">
 
-    <div class="mb-3">
-      <label class="form-label">Documento</label>
-      <input type="text" class="form-control" th:field="*{documento}"
-             th:classappend="${#fields.hasErrors('documento')} ? 'is-invalid'">
-      <div class="invalid-feedback" th:errors="*{documento}"></div>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Nombres</label>
-      <input type="text" class="form-control" th:field="*{nombres}"
-             th:classappend="${#fields.hasErrors('nombres')} ? 'is-invalid'">
-      <div class="invalid-feedback" th:errors="*{nombres}"></div>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Apellidos</label>
-      <input type="text" class="form-control" th:field="*{apellidos}"
-             th:classappend="${#fields.hasErrors('apellidos')} ? 'is-invalid'">
-      <div class="invalid-feedback" th:errors="*{apellidos}"></div>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Correo</label>
-      <input type="text" class="form-control" th:field="*{correo}"
-             th:classappend="${#fields.hasErrors('correo')} ? 'is-invalid'">
-      <div class="invalid-feedback" th:errors="*{correo}"></div>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Teléfono (opcional)</label>
-      <input type="text" class="form-control" th:field="*{telefono}"
-             th:classappend="${#fields.hasErrors('telefono')} ? 'is-invalid'">
-      <div class="invalid-feedback" th:errors="*{telefono}"></div>
-    </div>
+          <div class="mb-3">
+            <label class="form-label">Documento</label>
+            <input type="text" class="form-control" th:field="*{documento}"
+                   th:classappend="${#fields.hasErrors('documento')} ? 'is-invalid'">
+            <div class="invalid-feedback" th:errors="*{documento}"></div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Nombres</label>
+            <input type="text" class="form-control" th:field="*{nombres}"
+                   th:classappend="${#fields.hasErrors('nombres')} ? 'is-invalid'">
+            <div class="invalid-feedback" th:errors="*{nombres}"></div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Apellidos</label>
+            <input type="text" class="form-control" th:field="*{apellidos}"
+                   th:classappend="${#fields.hasErrors('apellidos')} ? 'is-invalid'">
+            <div class="invalid-feedback" th:errors="*{apellidos}"></div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Correo</label>
+            <input type="text" class="form-control" th:field="*{correo}"
+                   th:classappend="${#fields.hasErrors('correo')} ? 'is-invalid'">
+            <div class="invalid-feedback" th:errors="*{correo}"></div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Teléfono (opcional)</label>
+            <input type="text" class="form-control" th:field="*{telefono}"
+                   th:classappend="${#fields.hasErrors('telefono')} ? 'is-invalid'">
+            <div class="invalid-feedback" th:errors="*{telefono}"></div>
+          </div>
 
-    <button class="btn btn-primary" type="submit">Guardar</button>
-    <a class="btn btn-secondary" th:href="@{/estudiantes}">Cancelar</a>
-  </form>
+          <button class="btn btn-principal" type="submit"><i class="bi bi-save me-1"></i>Guardar</button>
+          <a class="btn btn-secondary" th:href="@{/estudiantes}">Cancelar</a>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 </body>
 </html>
