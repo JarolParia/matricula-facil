@@ -14,7 +14,8 @@ public class Estudiante {
     private Long id;
 
     @NotBlank(message = "El documento es obligatorio")
-    @Size(max = 20, message = "El documento no puede superar 20 caracteres")
+    @Pattern(regexp = "^[0-9]{6,10}$",
+            message = "El documento debe tener entre 6 y 10 dígitos, solo números")
     @Column(nullable = false, unique = true, length = 20)
     private String documento;
 

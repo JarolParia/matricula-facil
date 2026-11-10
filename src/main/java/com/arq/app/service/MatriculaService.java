@@ -30,16 +30,17 @@ public class MatriculaService {
 
     public Matricula guardar(Matricula matricula) {
         Long estudianteId = matricula.getEstudiante().getId();
+        String programa = matricula.getPrograma().trim();
+        matricula.setPrograma(programa);
 
         boolean duplicada = (matricula.getId() == null)
-                ? matriculaRepository.existsByEstudianteIdAndPeriodoAndPrograma(
-                estudianteId, matricula.getPeriodo(), matricula.getPrograma())
-                : matriculaRepository.existsByEstudianteIdAndPeriodoAndProgramaAndIdNot(
-                estudianteId, matricula.getPeriodo(), matricula.getPrograma(), matricula.getId());
+                ? matriculaRepository.existsByEstudianteIdAndPrograma(estudianteId, programa)
+                : matriculaRepository.existsByEstudianteIdAndProgramaAndIdNot(
+                estudianteId, programa, matricula.getId());
 
         if (duplicada) {
             throw new IllegalArgumentException(
-                    "El estudiante ya tiene una matricula en ese programa y periodo");
+                    "El estudiante ya tiene una matricula en ese programa");
         }
         return matriculaRepository.save(matricula);
     }
