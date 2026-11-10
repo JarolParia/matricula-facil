@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Estudiantes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: menu}"></div>
+<div class="container">
+    <div class="d-flex justify-content-between mb-3">
+        <h2>Estudiantes</h2>
+        <a class="btn btn-primary" th:href="@{/estudiantes/nuevo}">Registrar estudiante</a>
+    </div>
+    <div th:replace="~{fragments/nav :: mensajes}"></div>
+
+    <table class="table table-striped align-middle">
+        <thead>
+        <tr><th>Documento</th><th>Nombres</th><th>Apellidos</th><th>Correo</th><th>Teléfono</th><th>Acciones</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="e : ${estudiantes}">
+            <td th:text="${e.documento}"></td>
+            <td th:text="${e.nombres}"></td>
+            <td th:text="${e.apellidos}"></td>
+            <td th:text="${e.correo}"></td>
+            <td th:text="${e.telefono}"></td>
+            <td>
+                <a class="btn btn-sm btn-info" th:href="@{/estudiantes/{id}(id=${e.id})}">Ver</a>
+                <a class="btn btn-sm btn-warning" th:href="@{/estudiantes/{id}/editar(id=${e.id})}">Editar</a>
+                <form class="d-inline" method="post" th:action="@{/estudiantes/{id}/eliminar(id=${e.id})}"
+                      onsubmit="return confirm('¿Eliminar este estudiante?');">
+                    <button class="btn btn-sm btn-danger" type="submit">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(estudiantes)}">
+            <td colspan="6" class="text-center text-muted">No hay estudiantes registrados</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

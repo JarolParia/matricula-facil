@@ -11,11 +11,9 @@ public interface MatriculaRepository extends JpaRepository<Matricula, Long> {
 
     List<Matricula> findByEstudianteId(Long estudianteId);
 
-    boolean existsByEstudianteIdAndPeriodoAndPrograma(
-            Long estudianteId, String periodo, String programa);
+    boolean existsByEstudianteIdAndPrograma(Long estudianteId, String programa);
 
-    boolean existsByEstudianteIdAndPeriodoAndProgramaAndIdNot(
-            Long estudianteId, String periodo, String programa, Long id);
+    boolean existsByEstudianteIdAndProgramaAndIdNot(Long estudianteId, String programa, Long id);
 
     long countByEstudianteId(Long estudianteId);
 }

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalle de la matrícula</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/nav :: menu}"></div>
+<div class="container">
+  <h2>Detalle de la matrícula</h2>
+  <dl class="row">
+    <dt class="col-sm-3">Estudiante</dt>
+    <dd class="col-sm-9">
+      <a th:href="@{/estudiantes/{id}(id=${matricula.estudiante.id})}"
+         th:text="${matricula.estudiante.nombres + ' ' + matricula.estudiante.apellidos}"></a>
+    </dd>
+    <dt class="col-sm-3">Programa</dt><dd class="col-sm-9" th:text="${matricula.programa}"></dd>
+    <dt class="col-sm-3">Periodo</dt><dd class="col-sm-9" th:text="${matricula.periodo}"></dd>
+    <dt class="col-sm-3">Semestre</dt><dd class="col-sm-9" th:text="${matricula.semestre}"></dd>
+    <dt class="col-sm-3">Fecha</dt><dd class="col-sm-9" th:text="${matricula.fechaMatricula}"></dd>
+    <dt class="col-sm-3">Estado</dt><dd class="col-sm-9" th:text="${matricula.estado}"></dd>
+    <dt class="col-sm-3">Valor</dt><dd class="col-sm-9" th:text="${matricula.valor}"></dd>
+  </dl>
+  <a class="btn btn-secondary" th:href="@{/matriculas}">Volver</a>
+</div>
+</body>
+</html>
