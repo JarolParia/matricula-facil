@@ -1,15 +1,13 @@
-package com.arq.app.repository;
+package com.arq.app.infrastructure.adapter.out.persistence;
 
-import com.arq.app.model.Matricula;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
-public interface MatriculaRepository extends JpaRepository<Matricula, Long> {
+/** Detalle técnico de Spring Data JPA. Solo lo usa el adaptador de persistencia. */
+public interface MatriculaJpaRepository extends JpaRepository<MatriculaEntity, Long> {
 
-    List<Matricula> findByEstudianteId(Long estudianteId);
+    List<MatriculaEntity> findByEstudianteId(Long estudianteId);
 
     boolean existsByEstudianteIdAndPrograma(Long estudianteId, String programa);
 

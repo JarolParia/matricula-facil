@@ -13,13 +13,13 @@
           <input type="hidden" th:field="*{id}">
           <div class="mb-3">
             <label class="form-label">Estudiante</label>
-            <select class="form-select" th:field="*{estudiante.id}"
-                    th:classappend="${#fields.hasErrors('estudiante')} ? 'is-invalid'">
+            <select class="form-select" th:field="*{estudianteId}"
+                    th:classappend="${#fields.hasErrors('estudianteId')} ? 'is-invalid'">
               <option value="">-- Seleccione --</option>
               <option th:each="e : ${estudiantes}" th:value="${e.id}"
                       th:text="${e.documento + ' - ' + e.nombres + ' ' + e.apellidos}"></option>
             </select>
-            <div class="invalid-feedback" th:errors="*{estudiante}"></div>
+            <div class="invalid-feedback" th:errors="*{estudianteId}"></div>
           </div>
           <div class="mb-3">
             <label class="form-label">Programa</label>

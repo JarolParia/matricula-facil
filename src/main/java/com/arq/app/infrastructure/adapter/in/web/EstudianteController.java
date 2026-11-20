@@ -1,7 +1,10 @@
-package com.arq.app.controller;
+package com.arq.app.infrastructure.adapter.in.web;
 
-import com.arq.app.model.Estudiante;
-import com.arq.app.service.EstudianteService;
+import com.arq.app.domain.exception.DocumentoDuplicadoException;
+import com.arq.app.domain.exception.EstudianteConMatriculasException;
+import com.arq.app.domain.exception.EstudianteNoEncontradoException;
+import com.arq.app.domain.port.in.GestionarEstudiantesUseCase;
+import com.arq.app.domain.port.in.GestionarMatriculasUseCase;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,25 +12,32 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * Adaptador de entrada (web) para estudiantes.
+ * Solo depende de puertos de entrada: no conoce repositorios ni entidades JPA.
+ */
 @Controller
 @RequestMapping("/estudiantes")
 public class EstudianteController {
 
-    private final EstudianteService estudianteService;
+    private final GestionarEstudiantesUseCase estudiantes;
+    private final GestionarMatriculasUseCase matriculas;
 
-    public EstudianteController(EstudianteService estudianteService) {
-        this.estudianteService = estudianteService;
+    public EstudianteController(GestionarEstudiantesUseCase estudiantes,
+                                GestionarMatriculasUseCase matriculas) {
+        this.estudiantes = estudiantes;
+        this.matriculas = matriculas;
     }
 
     @GetMapping
     public String listar(Model model) {
-        model.addAttribute("estudiantes", estudianteService.listar());
+        model.addAttribute("estudiantes", estudiantes.listarEstudiantes());
         return "estudiantes/lista";
     }
 
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
-        model.addAttribute("estudiante", new Estudiante());
+        model.addAttribute("estudiante", new EstudianteForm());
         model.addAttribute("titulo", "Registrar estudiante");
         return "estudiantes/formulario";
     }
@@ -35,9 +45,10 @@ public class EstudianteController {
     @GetMapping("/{id}")
     public String detalle(@PathVariable Long id, Model model, RedirectAttributes flash) {
         try {
-            model.addAttribute("estudiante", estudianteService.buscarConMatriculas(id));
+            model.addAttribute("estudiante", estudiantes.buscarEstudiantePorId(id));
+            model.addAttribute("matriculas", matriculas.listarMatriculasDeEstudiante(id));
             return "estudiantes/detalle";
-        } catch (IllegalArgumentException e) {
+        } catch (EstudianteNoEncontradoException e) {
             flash.addFlashAttribute("error", e.getMessage());
             return "redirect:/estudiantes";
         }
@@ -46,25 +57,25 @@ public class EstudianteController {
     @GetMapping("/{id}/editar")
     public String editar(@PathVariable Long id, Model model, RedirectAttributes flash) {
         try {
-            model.addAttribute("estudiante", estudianteService.buscarPorId(id));
+            model.addAttribute("estudiante", EstudianteForm.desde(estudiantes.buscarEstudiantePorId(id)));
             model.addAttribute("titulo", "Editar estudiante");
             return "estudiantes/formulario";
-        } catch (IllegalArgumentException e) {
+        } catch (EstudianteNoEncontradoException e) {
             flash.addFlashAttribute("error", e.getMessage());
             return "redirect:/estudiantes";
         }
     }
 
     @PostMapping("/guardar")
-    public String guardar(@Valid @ModelAttribute("estudiante") Estudiante estudiante,
+    public String guardar(@Valid @ModelAttribute("estudiante") EstudianteForm form,
                           BindingResult result, Model model, RedirectAttributes flash) {
-        model.addAttribute("titulo", estudiante.getId() == null ? "Registrar estudiante" : "Editar estudiante");
+        model.addAttribute("titulo", form.getId() == null ? "Registrar estudiante" : "Editar estudiante");
         if (result.hasErrors()) {
             return "estudiantes/formulario";
         }
         try {
-            estudianteService.guardar(estudiante);
-        } catch (IllegalArgumentException e) {
+            estudiantes.guardarEstudiante(form.aDominio());
+        } catch (DocumentoDuplicadoException e) {
             result.rejectValue("documento", "duplicado", e.getMessage());
             return "estudiantes/formulario";
         }
@@ -75,9 +86,9 @@ public class EstudianteController {
     @PostMapping("/{id}/eliminar")
     public String eliminar(@PathVariable Long id, RedirectAttributes flash) {
         try {
-            estudianteService.eliminar(id);
+            estudiantes.eliminarEstudiante(id);
             flash.addFlashAttribute("exito", "Estudiante eliminado correctamente");
-        } catch (IllegalStateException | IllegalArgumentException e) {
+        } catch (EstudianteConMatriculasException | EstudianteNoEncontradoException e) {
             flash.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/estudiantes";
