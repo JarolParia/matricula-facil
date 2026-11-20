@@ -23,14 +23,14 @@
   <table class="table table-sm">
     <thead><tr><th>Programa</th><th>Periodo</th><th>Semestre</th><th>Estado</th><th>Valor</th></tr></thead>
     <tbody>
-    <tr th:each="m : ${estudiante.matriculas}">
+    <tr th:each="m : ${matriculas}">
       <td th:text="${m.programa}"></td>
       <td th:text="${m.periodo}"></td>
       <td th:text="${m.semestre}"></td>
       <td th:text="${m.estado}"></td>
       <td th:text="${m.valor}"></td>
     </tr>
-    <tr th:if="${#lists.isEmpty(estudiante.matriculas)}">
+    <tr th:if="${#lists.isEmpty(matriculas)}">
       <td colspan="5" class="text-muted">Sin matrículas registradas</td>
     </tr>
     </tbody>
